@@ -30,11 +30,5 @@ export class ChatbotService {
 
 
 
-  agregarOpcionPrimaria(opcion){
 
-    const uri = `${URI}/chatbot`
-
-    return this.http.post(uri, opcion)
-    
-  }
 }
