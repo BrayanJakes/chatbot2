@@ -1,0 +1,45 @@
+<div class="chat-config">
+    {{text}}
+    <button *ngFor="let item of themes" class="btn" [class.btn-active]="item === theme" (click)="setTheme(item)">
+        {{item}}
+      </button>
+</div>
+
+
+<div class="row">
+    <div class=" col-md-6 col-sm-3 ">
+
+        <div class="card">
+            <div class="card-header">
+                <h3>titulo</h3>
+            </div>
+
+            <div class="card-body">
+
+                <p>Mensaje de bienvenida para el cliente</p>
+
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h3>titulo</h3>
+            </div>
+
+            <div class="card-body">
+
+                <p>Mensaje de bienvenida para el cliente</p>
+
+            </div>
+        </div>
+
+    </div>
+
+    <div class=" col-md-6  col-xl-3 ">
+
+
+    </div>
+</div>
+
+
+<chat-widget [theme]="theme"> </chat-widget>
