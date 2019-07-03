@@ -20,18 +20,45 @@
                     <div>
                         <chat-avatar [image]="message.from.avatar" class="chat-message-from-avatar"></chat-avatar>
                         <div class="chat-message-text">
+
+
+
                             {{message.text}}
+
+
                         </div>
 
                     </div>
                     <div class="chat-message-date">
-                        <p *ngIf="message.type === 'received'"> <button class="btn btn-outline-info mt-2">click</button> &nbsp; <button class="btn btn-outline-info mt-2">click</button> &nbsp; <button class="btn btn-outline-info mt-2">click</button> </p> {{message.date | date: 'short'}}
+
+                        <div *ngIf="message.type === 'received' && !datosIngresadoCorrectos">
+
+
+                            <button class="btn btn-outline-info m-1" (click)="preguntas('Si')">Si</button>
+                            <button class="btn btn-outline-info m-1" (click)="preguntas('No')">No</button>
+
+
+
+
+
+                        </div>
+
+
+
+
+
+
+
+
+
+
+                        <p> {{message.date | date: 'short'}} </p>
                     </div>
                 </div>
             </ng-container>
         </div>
         <div class="chat-box-footer">
-            <chat-input (send)="sendMessage($event)" (dismiss)="toggleChat()" [focus]="focus"></chat-input>
+            <chat-input (send)="sendMessage($event)" (dismiss)="toggleChat()" *ngIf="datosIngresadoCorrectos" [focus]="focus"></chat-input>
         </div>
     </div>
     <button class="chat-button" (click)="toggleChat()">

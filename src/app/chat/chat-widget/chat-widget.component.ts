@@ -1,6 +1,7 @@
 import { Component, ElementRef, HostListener, Input, OnInit, ViewChild } from '@angular/core'
 import { Subject } from 'rxjs'
 import { fadeIn, fadeInOut } from '../animations'
+import { ChatbotService } from '../../services/chatbot.service';
 
 const randomMessages = [
   'Nice to meet you',
@@ -31,6 +32,24 @@ const getRandomMessage = () => randomMessages[rand(randomMessages.length)]
 export class ChatWidgetComponent implements OnInit {
   @ViewChild('bottom', {static: false}) bottom: ElementRef
   @Input() public theme: 'blue' | 'grey' | 'red' = 'blue'
+
+  chatbotMensajes: any = {};
+
+
+  formularioBot = {
+    nombre: '',
+    email: '',
+    telefono: ''
+  }
+
+
+  datosIngresadoCorrectos = true
+
+
+  constructor ( private chatbotService: ChatbotService) {
+
+    this.chatbotMensajes = chatbotService.chatbotMensajes;
+  }
 
   public _visible = false
 
@@ -91,8 +110,17 @@ export class ChatWidgetComponent implements OnInit {
   ngOnInit() {
     setTimeout(() => this.visible = true, 1000)
     setTimeout(() => {
-      this.addMessage(this.operator, 'Hola, En que puedo ayudarte?', 'received')
+      this.addMessage(this.operator, this.chatbotService.chatbotMensajes.mensajeInicial , 'received')
     }, 1500)
+
+
+    setTimeout(() => {
+     
+        this.addMessage(this.operator, `para empezar dinos como te llamas?` , 'received')
+   
+    }, 2000)
+
+    
   }
 
   public toggleChat() {
@@ -103,8 +131,46 @@ export class ChatWidgetComponent implements OnInit {
     if (message.trim() === '') {
       return
     }
-    this.addMessage(this.client, message, 'sent')
-    setTimeout(() => this.randomMessage(), 1000)
+
+   
+
+    this.addMessage(this.client, message, 'sent');
+
+
+    if (this.formularioBot.nombre === ''){
+      this.formularioBot.nombre = message;
+      return setTimeout(() => {this.addMessage(this.operator, `Ahora ingresa tu email`, 'received')}, 1500) 
+    };
+
+    if (this.formularioBot.email === ''){
+      this.formularioBot.email = message;
+      return setTimeout(() => {this.addMessage(this.operator, `Ahora ingresa tu telefono`, 'received')}, 1500) 
+    }
+
+    if (this.formularioBot.telefono === ''){
+      this.formularioBot.telefono = message;
+     return setTimeout(() => {
+       this.datosIngresadoCorrectos = false;
+      this.addMessage(this.operator, `Estos son tus datos que ingresastes: 
+
+      nombre: ${this.formularioBot.nombre},
+      email: ${this.formularioBot.email},
+      telefono: ${this.formularioBot.telefono}.
+
+      Son tus datos correctos?
+      `, 'received');
+     }, 1500) 
+    }
+
+
+
+    setTimeout(() => {
+      this.addMessage(this.operator, `No nos hemos olvidado de usted ${this.formularioBot.nombre}, les notificaremos a travez de su correo o celular sobre nuestro servicio `, 'received')
+    }, 1500)
+
+    
+
+
   }
 
   @HostListener('document:keypress', ['$event'])
@@ -117,4 +183,51 @@ export class ChatWidgetComponent implements OnInit {
     }
   }
 
+
+  preguntas(instruccion) {
+
+    this.addMessage(this.client, instruccion, 'sent');
+
+   
+
+    if (instruccion === 'Si') {
+     return setTimeout(() => {
+       this.datosIngresadoCorrectos = true;
+        this.addMessage(this.operator, `Bienvenido ${this.formularioBot.nombre} En breve uno de nuestro asesore se pondra en contacto contigo atravez de tu correo o tu celular, por favor este atento`, 'received')
+      }, 1500)
+    }
+    if (instruccion === 'No'){
+      this.datosIngresadoCorrectos = true;
+      this.formularioBot.nombre = '';
+      this.formularioBot.email = '';
+      this.formularioBot.telefono = '';
+
+     return setTimeout(() => {
+     
+        this.addMessage(this.operator, `para empezar dinos como te llamas?` , 'received')
+   
+    }, 2000)
+    }
+
+   
+
+
+    
+
+
+
+  }
+
+  preguntas2(opcion, tarea) {
+
+    console.log(tarea);
+
+
+    this.addMessage(this.client, opcion, 'sent')
+
+    setTimeout(() => {
+        this.addMessage(this.operator, tarea, 'received')
+    }, 1500)
+
+  }
 }

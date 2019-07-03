@@ -1,15 +1,34 @@
-<div class="chat-config">
-    {{text}}
-    <button *ngFor="let item of themes" class="btn" [class.btn-active]="item === theme" (click)="setTheme(item)">
-        {{item}}
-      </button>
+<div class="row">
+    <div class=" col-md-6 col-sm-3 ">
+        <div class="chat-config">
+            {{text}}
+            <button *ngFor="let item of themes" class="btn" [class.btn-active]="item === theme" (click)="setTheme(item)">
+            {{item}}
+          </button>
+        </div>
+    </div>
+
+    <div class=" col-md-6 col-sm-3 ">
+
+        <div class="chat-config">
+
+            <button class="btn btn-info" (click)="probarChat = true"> Probar chat </button> &nbsp; &nbsp; &nbsp; &nbsp;
+
+            <button class="btn btn-info" (click)="probarChat = false"> Cerrar chat </button>
+
+
+        </div>
+
+    </div>
 </div>
+
+
 
 
 <div class="row">
     <div class=" col-md-6 col-sm-3 ">
 
-        <div class="card">
+        <div class="card mt-3">
             <div class="card-header">
                 <h3>titulo</h3>
             </div>
@@ -18,28 +37,125 @@
 
                 <p>Mensaje de bienvenida para el cliente</p>
 
+                <input type="text" class="form-control" name="mensajeInicial" [(ngModel)]="chatbotMensajes.mensajeInicial">
+
+                <div class="row">
+                    <div class="col-md-12 mt-3">
+                        <button class="btn btn-outline-info btn-block"> Guardar </button>
+                    </div>
+                </div>
+
             </div>
         </div>
 
-        <div class="card">
+        <div class="card mt-3">
             <div class="card-header">
-                <h3>titulo</h3>
+                <h3>Opciones Primarias</h3>
             </div>
 
             <div class="card-body">
 
-                <p>Mensaje de bienvenida para el cliente</p>
+                <p>Puedes colocar cualquier opcion principal que hara tu chatbot</p>
+
+                <form #form="ngForm">
+
+                    <div *ngFor="let instruccion of chatbotConfig.instrucciones; let i = index">
+
+                        <span class="badge badge-secondary"> <span (click)="Eliminar(i)" > X </span>{{instruccion.opcion}}</span>
+
+                    </div>
+
+                    <br>
+
+                    <div class="form-group ">
+                        <input type="text" name="instrucciones" [(ngModel)]="form.value.instrucciones" class="form-control"> <br>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+
+                            <button class="btn btn-outline-info btn-block" (click)="agregarInstruccion(form)">Agregar</button>
+                        </div>
+
+                        <div class="col-md-6">
+                            <button class="btn btn-outline-info btn-block"> Guardar </button>
+
+                        </div>
+                    </div>
+
+
+
+
+
+
+
+                </form>
 
             </div>
         </div>
 
     </div>
 
-    <div class=" col-md-6  col-xl-3 ">
+    <div class=" col-md-6  col-sm-3 ">
+
+        <div class="card mt-3">
+            <div class="card-header">
+                <h3>Opciones Secundaria</h3>
+            </div>
+
+            <div class="card-body">
+
+                <p>Aqui iran las instrucciones de cada opcion que coloques</p>
+
+                <form #form="ngForm">
+
+                    <div *ngFor="let instruccion of chatbotConfig.instrucciones; let i = index">
+
+                        <div class="text-center mt-3">
+                            <span class="badge badge-secondary "> <span (click)="Eliminar(i)" > X </span>{{instruccion.opcion}}</span>
+
+                        </div>
 
 
+
+
+                        <br>
+
+                        <div class="form-group ">
+                            <input type="text" [name]="opcioneSecundaria" #opcioneSecundaria (keyup.enter)="opcion2(opcioneSecundaria.value, instruccion.opcion, i )" class="form-control"> <br>
+                        </div>
+
+
+                        <div class="row">
+                            <div class="col-md-6">
+
+                                <button class="btn btn-outline-info btn-block" (click)="opcion2(opcioneSecundaria.value, instruccion.opcion )">Agregar</button>
+                            </div>
+
+                            <div class="col-md-6">
+                                <button class="btn btn-outline-info btn-block"> Guardar </button>
+
+                            </div>
+                        </div>
+
+                    </div>
+
+
+
+
+
+
+
+
+
+                </form>
+
+            </div>
+
+        </div>
     </div>
-</div>
 
 
-<chat-widget [theme]="theme"> </chat-widget>
+
+
+    <chat-widget [theme]="theme" *ngIf="probarChat"> </chat-widget>
